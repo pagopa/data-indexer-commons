@@ -12,6 +12,11 @@
     "url": "https://github.com/pagopa/data-indexer-commons/issues"
   },
   "homepage": "https://github.com/pagopa/data-indexer-commons#readme",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/"
+  ],
   "source": "src/index",
   "release-it": {
     "git": {
