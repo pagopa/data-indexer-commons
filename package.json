@@ -13,6 +13,7 @@
     "url": "https://github.com/pagopa/data-indexer-commons/issues"
   },
   "homepage": "https://github.com/pagopa/data-indexer-commons#readme",
+  "source": "src/index",
   "scripts": {
     "lint": "eslint \"src/**\"",
     "build": "tsc",
