@@ -1,6 +1,6 @@
 {
   "name": "data-indexer-commons",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Common library for io-platform data-indexer",
   "author": "IO Platform team",
   "license": "MIT",
@@ -13,7 +13,6 @@
   },
   "homepage": "https://github.com/pagopa/data-indexer-commons#readme",
   "source": "src/index",
-
   "release-it": {
     "git": {
       "commitMessage": "chore: release ${version}",
