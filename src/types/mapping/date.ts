@@ -1,8 +1,15 @@
 import * as t from "io-ts";
-import { OutputFormat } from "../formatter/date";
+
+export const OutputFormat = t.union([
+  t.literal("yyyy-MM-dd"),
+  t.literal("yyyy-MM-dd HH:mm"),
+  t.literal("yyyy-MM-dd HH:mm:ss"),
+]);
+
+export type OutputFormat = t.TypeOf<typeof OutputFormat>;
 
 const DateStringToUtcFormatMapping = t.type({
-  mapper: t.literal("DATE_TO_UTC")
+  mapper: t.literal("DATE_TO_UTC"),
 });
 
 type DateStringToUtcFormatMapping = t.TypeOf<
@@ -10,27 +17,27 @@ type DateStringToUtcFormatMapping = t.TypeOf<
 >;
 
 const IsoToUtcFormatMapping = t.type({
-  mapper: t.literal("ISO_TO_UTC")
+  mapper: t.literal("ISO_TO_UTC"),
 });
 
 type IsoToUtcFormatMapping = t.TypeOf<typeof IsoToUtcFormatMapping>;
 
 const DateStringToIsoFormatMapping = t.type({
-  mapper: t.literal("DATE_TO_ISO")
+  mapper: t.literal("DATE_TO_ISO"),
 });
 type DateStringToIsoFormatMapping = t.TypeOf<
   typeof DateStringToIsoFormatMapping
 >;
 
 const DateStringToTimestampFormatMapping = t.type({
-  mapper: t.literal("DATE_TO_TIMESTAMP")
+  mapper: t.literal("DATE_TO_TIMESTAMP"),
 });
 type DateStringToTimestampFormatMapping = t.TypeOf<
   typeof DateStringToTimestampFormatMapping
 >;
 
 const DateStringFromTimestampFormatMapping = t.type({
-  mapper: t.literal("DATE_FROM_TIMESTAMP")
+  mapper: t.literal("DATE_FROM_TIMESTAMP"),
 });
 
 type DateStringFromTimestampFormatMapping = t.TypeOf<
@@ -42,13 +49,13 @@ export const DateMapping = t.union([
   IsoToUtcFormatMapping,
   DateStringToIsoFormatMapping,
   DateStringToTimestampFormatMapping,
-  DateStringFromTimestampFormatMapping
+  DateStringFromTimestampFormatMapping,
 ]);
 
 export type DateMapping = t.TypeOf<typeof DateMapping>;
 
 export const ConvertFormatMapping = t.type({
-  output: OutputFormat
+  output: OutputFormat,
 });
 
 export type ConvertFormatMapping = t.TypeOf<typeof ConvertFormatMapping>;
