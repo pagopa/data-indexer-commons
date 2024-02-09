@@ -4,12 +4,12 @@ import { SelectFieldsMapping } from "./selectFields";
 
 const SelectInputConfig = t.type({
   fields: t.readonlyArray(NonEmptyString),
-  type: t.literal("SELECT_INPUT")
+  type: t.literal("SELECT_INPUT"),
 });
 
 export const SelectInputSelectFieldsMapping = t.intersection([
   SelectInputConfig,
-  SelectFieldsMapping
+  SelectFieldsMapping,
 ]);
 
 export const SelectInputMapping = SelectInputSelectFieldsMapping;

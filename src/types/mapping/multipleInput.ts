@@ -3,35 +3,35 @@ import * as t from "io-ts";
 import { MergeFieldsMapping } from "./mergeFields";
 
 const inputType = t.type({
-  type: t.literal("MULTIPLE_INPUT")
+  type: t.literal("MULTIPLE_INPUT"),
 });
 
 const Separator = t.partial({
-  separator: t.string
+  separator: t.string,
 });
 
 const InputOutputField = t.intersection([
   t.type({
-    inputFieldName: NonEmptyString
+    inputFieldName: NonEmptyString,
   }),
   t.partial({
-    outputFieldName: NonEmptyString
-  })
+    outputFieldName: NonEmptyString,
+  }),
 ]);
 
 const InputOutputFields = t.type({
-  inputOutputFields: t.readonlyArray(InputOutputField)
+  inputOutputFields: t.readonlyArray(InputOutputField),
 });
 
 export const MultipleInputConfig = t.intersection([
   inputType,
   Separator,
-  InputOutputFields
+  InputOutputFields,
 ]);
 
 export const MultipleInputMergeFieldMapping = t.intersection([
   MultipleInputConfig,
-  MergeFieldsMapping
+  MergeFieldsMapping,
 ]);
 
 export const MultipleInputMapping = MultipleInputMergeFieldMapping;
