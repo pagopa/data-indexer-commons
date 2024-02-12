@@ -1,6 +1,6 @@
-import { EnrichmentDataSource } from "enrichment/enrichment";
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
+import { EnrichmentDataSource } from "../enrichment/enrichment";
 
 describe("DataEnrichment", () => {
   const aBlobStorageParams = {
