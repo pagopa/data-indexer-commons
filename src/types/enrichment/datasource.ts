@@ -1,12 +1,6 @@
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 import * as t from "io-ts";
 
-const DBParams = t.type({
-  connectionString: NonEmptyString,
-  query: NonEmptyString,
-  whereConditionId: NonEmptyString,
-});
-
 const APIParams = t.type({
   authentication: t.partial({
     apiKeyHeaderName: NonEmptyString,
@@ -30,14 +24,50 @@ const BlobStorageParams = t.type({
   extension: NonEmptyString,
 });
 
-export const EnrichmentDataSource = t.type({
-  params: t.union([BlobStorageParams, TableStorageParams, APIParams, DBParams]),
-  type: t.union([
-    t.literal("BlobStorage"),
-    t.literal("TableStorage"),
-    t.literal("API"),
-    t.literal("DB"),
-  ]),
+export const BlobStorage = t.type({
+  params: BlobStorageParams,
+  type: t.literal("BlobStorage"),
 });
+
+export const TableStorage = t.type({
+  params: TableStorageParams,
+  type: t.literal("TableStorage"),
+});
+
+export const API = t.type({
+  params: APIParams,
+  type: t.literal("API"),
+});
+
+const CommonDBParams = t.type({
+  connectionString: NonEmptyString,
+  id: NonEmptyString,
+  query: NonEmptyString,
+});
+
+const CosmosDBParams = t.intersection([
+  CommonDBParams,
+  t.type({
+    partitionKey: NonEmptyString,
+  }),
+]);
+
+const MongoDBParams = CommonDBParams;
+
+const PosgresDBParams = CommonDBParams;
+
+const DBParams = t.union([CosmosDBParams, MongoDBParams, PosgresDBParams]);
+
+export const DB = t.type({
+  params: DBParams,
+  type: t.literal("DB"),
+});
+
+export const EnrichmentDataSource = t.union([
+  BlobStorage,
+  TableStorage,
+  API,
+  DB,
+]);
 
 export type EnrichmentDataSource = t.TypeOf<typeof EnrichmentDataSource>;
