@@ -1,6 +1,6 @@
+import { EnrichmentDataSource } from "enrichment/enrichment";
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
-import { DataEnrichment } from "../enrichment/enrichment";
 
 describe("DataEnrichment", () => {
   const aBlobStorageParams = {
@@ -10,10 +10,23 @@ describe("DataEnrichment", () => {
     extension: "txt",
   };
 
-  const aDBParams = {
-    connectionString: "db_connection_string",
+  const aCosmosDBParams = {
+    connectionString: "cosmos_db_connection_string",
+    query: "SELECT * FROM container",
+    partitionKey: "pk",
+    id: "id",
+  };
+
+  const aMongoDBParams = {
+    connectionString: "mongo_db_connection_string",
+    query: "db.collection.find({})",
+    id: "id",
+  };
+
+  const aPostgresDBParams = {
+    connectionString: "postgres_db_connection_string",
     query: "SELECT * FROM table",
-    whereConditionId: "id",
+    id: "id",
   };
 
   const anAPIParams = {
@@ -37,8 +50,18 @@ describe("DataEnrichment", () => {
     type: "BlobStorage",
   };
 
-  const aProperDBDataSource = {
-    params: aDBParams,
+  const aProperCosmosDBDataSource = {
+    params: aCosmosDBParams,
+    type: "DB",
+  };
+
+  const aProperMongoDBDataSource = {
+    params: aMongoDBParams,
+    type: "DB",
+  };
+
+  const aProperPostgresDBDataSource = {
+    params: aPostgresDBParams,
     type: "DB",
   };
 
@@ -53,20 +76,29 @@ describe("DataEnrichment", () => {
   };
 
   it.each`
-    description           | input                                                     | success
-    ${"BlobStorage"}      | ${aProperBlobStorageDataSource}                           | ${true}
-    ${"DB"}               | ${aProperDBDataSource}                                    | ${true}
-    ${"API"}              | ${aProperAPIDataSource}                                   | ${true}
-    ${"TableStorage"}     | ${aProperTableStorageDataSource}                          | ${true}
-    ${"Empty"}            | ${{}}                                                     | ${false}
-    ${"Incorrect type"}   | ${{ type: "InvalidType" }}                                | ${false}
-    ${"Incorrect params"} | ${{ type: "BlobStorage", params: { invalidParam: 123 } }} | ${false}
+    description                   | input                                                      | success
+    ${"BlobStorage (Correct)"}    | ${aProperBlobStorageDataSource}                            | ${true}
+    ${"BlobStorage (Incorrect)"}  | ${{ type: "BlobStorage", params: { invalidParam: 123 } }}  | ${false}
+    ${"CosmosDB (Correct)"}       | ${aProperCosmosDBDataSource}                               | ${true}
+    ${"CosmosDB (Incorrect)"}     | ${{ type: "DB", params: { invalidParam: 123 } }}           | ${false}
+    ${"MongoDB (Correct)"}        | ${aProperMongoDBDataSource}                                | ${true}
+    ${"MongoDB (Incorrect)"}      | ${{ type: "DB", params: { invalidParam: 123 } }}           | ${false}
+    ${"PostgresDB (Correct)"}     | ${aProperPostgresDBDataSource}                             | ${true}
+    ${"PostgresDB (Incorrect)"}   | ${{ type: "DB", params: { invalidParam: 123 } }}           | ${false}
+    ${"API (Correct)"}            | ${aProperAPIDataSource}                                    | ${true}
+    ${"API (Incorrect)"}          | ${{ type: "API", params: { invalidParam: 123 } }}          | ${false}
+    ${"TableStorage (Correct)"}   | ${aProperTableStorageDataSource}                           | ${true}
+    ${"TableStorage (Incorrect)"} | ${{ type: "TableStorage", params: { invalidParam: 123 } }} | ${false}
+    ${"Empty"}                    | ${{}}                                                      | ${false}
+    ${"Incorrect type"}           | ${{ type: "InvalidType" }}                                 | ${false}
   `("should $description decode properly", ({ input, success }) => {
     pipe(
       input,
-      DataEnrichment.decode,
-      E.map((decoded) => expect(decoded).toEqual(input)),
-      E.mapLeft(() => expect(success).toBeFalsy()),
+      EnrichmentDataSource.decode,
+      E.fold(
+        () => expect(success).toBeFalsy(),
+        (decoded) => expect(decoded).toEqual(input),
+      ),
     );
   });
 });
