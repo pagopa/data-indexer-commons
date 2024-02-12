@@ -1,11 +1,11 @@
+import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates";
 import {
   NonNegativeInteger,
   WithinRangeInteger,
 } from "@pagopa/ts-commons/lib/numbers";
-import * as t from "io-ts";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
-import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates";
 import { withDefault } from "@pagopa/ts-commons/lib/types";
+import * as t from "io-ts";
 
 export const CosmosDBType = t.literal("CosmosDB");
 export type CosmosDBType = t.TypeOf<typeof CosmosDBType>;

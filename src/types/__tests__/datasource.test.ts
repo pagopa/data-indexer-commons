@@ -1,4 +1,7 @@
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
+import * as E from "fp-ts/Either";
+import * as B from "fp-ts/boolean";
+import { pipe } from "fp-ts/lib/function";
 import {
   BlobStorageDataSource,
   CDCConnectionSourceType,
@@ -10,10 +13,7 @@ import {
   QueueDataSource,
   SelectAllConnectionSourceType,
   SelectAllDataSource,
-} from "../datasource";
-import * as E from "fp-ts/Either";
-import * as B from "fp-ts/boolean";
-import { pipe } from "fp-ts/lib/function";
+} from "../datasource/datasource";
 
 describe("DataSource", () => {
   const aProperDatasourceConfig = {

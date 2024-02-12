@@ -1,8 +1,8 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
-import { EnrichmentDataSource } from "../enrichment/datasource";
+import { DataEnrichment } from "../enrichment/enrichment";
 
-describe("EnrichmentDataSource", () => {
+describe("DataEnrichment", () => {
   const aBlobStorageParams = {
     blobFilename: "file.txt",
     connectionString: "blob_connection_string",
@@ -64,7 +64,7 @@ describe("EnrichmentDataSource", () => {
   `("should $description decode properly", ({ input, success }) => {
     pipe(
       input,
-      EnrichmentDataSource.decode,
+      DataEnrichment.decode,
       E.map((decoded) => expect(decoded).toEqual(input)),
       E.mapLeft(() => expect(success).toBeFalsy()),
     );

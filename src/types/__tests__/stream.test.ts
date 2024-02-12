@@ -1,6 +1,6 @@
-import { pipe } from "fp-ts/lib/function";
 import * as E from "fp-ts/Either";
-import { StreamDataSource } from "../stream";
+import { pipe } from "fp-ts/lib/function";
+import { StreamDataSource } from "../datasource/stream";
 
 const aStreamDataSourceInput = {
   master: {

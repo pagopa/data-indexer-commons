@@ -30,7 +30,7 @@ const BlobStorageParams = t.type({
   extension: NonEmptyString,
 });
 
-export const EnrichmentDataSource = t.type({
+export const DataEnrichment = t.partial({
   params: t.union([BlobStorageParams, TableStorageParams, APIParams, DBParams]),
   type: t.union([
     t.literal("BlobStorage"),
@@ -40,4 +40,4 @@ export const EnrichmentDataSource = t.type({
   ]),
 });
 
-export type EnrichmentDataSource = t.TypeOf<typeof EnrichmentDataSource>;
+export type DataEnrichment = t.TypeOf<typeof DataEnrichment>;
