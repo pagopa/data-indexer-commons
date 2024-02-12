@@ -108,8 +108,7 @@ describe("DataPipeline", () => {
     description                                                | dataSourcing             | dataMapping             | dataEnrichment             | dataFiltering             | dataOutput             | success
     ${"should decode properly with minimum valid config"}      | ${aValidDataSourcing}    | ${{}}                   | ${{}}                      | ${{}}                     | ${aValidDataOutput}    | ${true}
     ${"should decode properly with valid dataPipeline config"} | ${aValidDataSourcing}    | ${aValidDataMapping}    | ${{}}                      | ${{}}                     | ${aValidDataOutput}    | ${true}
-    ${"should decode properly with valid dataPipeline config"} | ${aValidDataSourcing}    | ${aValidDataMapping}    | ${aValidDataEnrichment}    | ${aValidDataFiltering}    | ${aValidDataOutput}    | ${true}
-    ${"should decode properly with valid dataPipeline config"} | ${aValidDataSourcing}    | ${aValidDataMapping}    | ${aValidDataEnrichment}    | ${aValidDataFiltering}    | ${{}}                  | ${true}
+    ${"should decode properly with valid dataPipeline config"} | ${aValidDataSourcing}    | ${aValidDataMapping}    | ${aValidDataEnrichment}    | ${{}}                     | ${aValidDataOutput}    | ${true}
     ${"should decode properly with valid dataPipeline config"} | ${aValidDataSourcing}    | ${aValidDataMapping}    | ${aValidDataEnrichment}    | ${aValidDataFiltering}    | ${aValidDataOutput}    | ${true}
     ${"should fail with missing data sourcing"}                | ${{}}                    | ${aValidDataMapping}    | ${aValidDataEnrichment}    | ${aValidDataFiltering}    | ${aValidDataOutput}    | ${false}
     ${"should fail with missing output"}                       | ${aValidDataSourcing}    | ${aValidDataMapping}    | ${aValidDataEnrichment}    | ${aValidDataFiltering}    | ${{}}                  | ${false}
