@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 import * as t from "io-ts";
 
@@ -56,12 +57,11 @@ const MongoDBParams = CommonDBParams;
 
 const PosgresDBParams = CommonDBParams;
 
-const DBParams = t.union([CosmosDBParams, MongoDBParams, PosgresDBParams]);
-
-export const DB = t.type({
-  params: DBParams,
-  type: t.literal("DB"),
-});
+const DB = t.union([
+  t.type({ type: t.literal("CosmosDB"), params: CosmosDBParams }),
+  t.type({ type: t.literal("MongoDB"), params: MongoDBParams }),
+  t.type({ type: t.literal("PosgresDB"), params: PosgresDBParams }),
+]);
 
 export const EnrichmentDataSource = t.union([
   BlobStorage,

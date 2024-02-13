@@ -52,17 +52,17 @@ describe("EnrichmentDataSource", () => {
 
   const aProperCosmosDBDataSource = {
     params: aCosmosDBParams,
-    type: "DB",
+    type: "CosmosDB", // Fix: Correct the type field to match the expected value
   };
 
   const aProperMongoDBDataSource = {
     params: aMongoDBParams,
-    type: "DB",
+    type: "MongoDB", // Fix: Correct the type field to match the expected value
   };
 
   const aProperPostgresDBDataSource = {
     params: aPostgresDBParams,
-    type: "DB",
+    type: "PosgresDB", // Fix: Correct the type field to match the expected value
   };
 
   const aProperAPIDataSource = {
@@ -80,11 +80,11 @@ describe("EnrichmentDataSource", () => {
     ${"BlobStorage (Correct)"}    | ${aProperBlobStorageDataSource}                            | ${true}
     ${"BlobStorage (Incorrect)"}  | ${{ type: "BlobStorage", params: { invalidParam: 123 } }}  | ${false}
     ${"CosmosDB (Correct)"}       | ${aProperCosmosDBDataSource}                               | ${true}
-    ${"CosmosDB (Incorrect)"}     | ${{ type: "DB", params: { invalidParam: 123 } }}           | ${false}
+    ${"CosmosDB (Incorrect)"}     | ${{ type: "CosmosDB", params: { invalidParam: 123 } }}     | ${false}
     ${"MongoDB (Correct)"}        | ${aProperMongoDBDataSource}                                | ${true}
-    ${"MongoDB (Incorrect)"}      | ${{ type: "DB", params: { invalidParam: 123 } }}           | ${false}
+    ${"MongoDB (Incorrect)"}      | ${{ type: "MongoDB", params: { invalidParam: 123 } }}      | ${false}
     ${"PostgresDB (Correct)"}     | ${aProperPostgresDBDataSource}                             | ${true}
-    ${"PostgresDB (Incorrect)"}   | ${{ type: "DB", params: { invalidParam: 123 } }}           | ${false}
+    ${"PostgresDB (Incorrect)"}   | ${{ type: "PosgresDB", params: { invalidParam: 123 } }}    | ${false}
     ${"API (Correct)"}            | ${aProperAPIDataSource}                                    | ${true}
     ${"API (Incorrect)"}          | ${{ type: "API", params: { invalidParam: 123 } }}          | ${false}
     ${"TableStorage (Correct)"}   | ${aProperTableStorageDataSource}                           | ${true}
