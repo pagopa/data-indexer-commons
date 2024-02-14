@@ -31,8 +31,8 @@ describe("EnrichmentDataSource", () => {
 
   const anAPIParams = {
     authentication: {
-      apiKeyHeaderName: "X-API-Key",
-      apiKeyHeaderValue: "my-api-key",
+      authHeaderName: "X-API-Key",
+      authHeaderValue: "my-api-key",
     },
     endpointUrl: "endpoint_url",
     idParam: "id",

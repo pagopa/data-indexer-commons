@@ -4,8 +4,8 @@ import * as t from "io-ts";
 
 const APIParams = t.type({
   authentication: t.partial({
-    apiKeyHeaderName: NonEmptyString,
-    apiKeyHeaderValue: NonEmptyString,
+    authHeaderName: NonEmptyString,
+    authHeaderValue: NonEmptyString,
   }),
   endpointUrl: NonEmptyString,
   idParam: NonEmptyString,
