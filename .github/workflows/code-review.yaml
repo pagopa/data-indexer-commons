@@ -1,0 +1,46 @@
+name: 'Code Review'
+
+on:
+  push:
+    branches: ['main']
+    paths:
+      - apps/**
+      - packages/**
+      - package.json
+  pull_request:
+    types: [opened, synchronize]
+    paths:
+      - src/**
+      - package.json
+  workflow_dispatch: {}
+
+jobs:
+  code_review:
+    timeout-minutes: 10 # temp fix
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Cache turbo build setup
+        uses: actions/cache@13aacd865c20de90d75de3b17ebe84f7a17d57d2
+        with:
+          path: node_modules/.cache/turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - name: 'Code review'
+        run: yarn run code-review
