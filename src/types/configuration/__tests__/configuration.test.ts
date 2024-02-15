@@ -1,6 +1,7 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
-import { DataPipeline } from "../../configuration/configuration";
+import { Configuration } from "../../configuration/configuration";
+
 describe("DataPipeline", () => {
   const aValidDataSourcing = {
     master: {
@@ -36,22 +37,6 @@ describe("DataPipeline", () => {
       dbName: "dbName",
       leaseContainerName: "lease",
     },
-  };
-
-  const aValidDataOutput = {
-    connectionString: "connectionString",
-    indexName: "indexName",
-    type: "DATA_OUTPUT",
-    indexer: "ELASTICSEARCH",
-    deduplicationStrategy: "INDEXER",
-  };
-
-  const anInvalidDataOutput = {
-    connectionString: "connectionString",
-    indexName: "indexName",
-    type: "INVALID",
-    indexer: "ELASTICSEARCH",
-    deduplicationStrategy: "TIMESTAMP",
   };
 
   const aBlobStorageParams = {
@@ -115,92 +100,221 @@ describe("DataPipeline", () => {
     },
   };
 
-  const aValidEmptyTransformationStep = {};
-
-  const aValidTransformationStepWithOnlyMapping = {
-    dataMapping: [aValidDataMapping],
-  };
-  const aValidTransformationStepWithOnlyEnrichment = {
-    dataEnrichment: [aValidDataEnrichment],
-  };
-  const aValidTransformationStepWithOnlyFiltering = {
-    dataFiltering: [aValidDataFiltering],
+  const anInvalidDataPipelineWithoutDataSourcing = {
+    outputResourceName: "indexName",
+    dataTransformation: [{}],
+    internalQueueTopicName: "internalQueueTopicName",
   };
 
-  const aValidTransformationStep = {
-    dataMapping: [aValidDataMapping],
-    dataEnrichment: [aValidDataEnrichment],
-    dataFiltering: [aValidDataFiltering],
+  const anInvalidDataPipelineWithInvalidDataSourcing = {
+    dataSourcing: anInvalidDataSourcing,
+    outputResourceName: "indexName",
+    dataTransformation: [{}],
+    internalQueueTopicName: "internalQueueTopicName",
   };
 
-  //   ${"should decode properly with valid dataPipeline config"} | ${aValidDataSourcing}    | ${aValidDataMapping}    | ${{}}                      | ${{}}                     | ${aValidDataOutput}    | ${true}
-  // ${"should decode properly with valid dataPipeline config"} | ${aValidDataSourcing}    | ${aValidDataMapping}    | ${aValidDataEnrichment}    | ${{}}                     | ${aValidDataOutput}    | ${true}
-  // ${"should decode properly with valid dataPipeline config"} | ${aValidDataSourcing}    | ${aValidDataMapping}    | ${aValidDataEnrichment}    | ${aValidDataFiltering}    | ${aValidDataOutput}    | ${true}
-  // ${"should fail with missing data sourcing"}                | ${{}}                    | ${aValidDataMapping}    | ${aValidDataEnrichment}    | ${aValidDataFiltering}    | ${aValidDataOutput}    | ${false}
-  // ${"should fail with missing output"}                       | ${aValidDataSourcing}    | ${aValidDataMapping}    | ${aValidDataEnrichment}    | ${aValidDataFiltering}    | ${{}}                  | ${false}
-  // ${"should fail with invalid data sourcing"}                | ${anInvalidDataSourcing} | ${aValidDataMapping}    | ${aValidDataEnrichment}    | ${aValidDataFiltering}    | ${aValidDataOutput}    | ${false}
-  // ${"should fail with invalid data output"}                  | ${aValidDataSourcing}    | ${aValidDataMapping}    | ${aValidDataEnrichment}    | ${aValidDataFiltering}    | ${anInvalidDataOutput} | ${false}
-  // ${"should fail with invalid data enrichment"}              | ${aValidDataSourcing}    | ${aValidDataMapping}    | ${anInvalidDataEnrichment} | ${aValidDataFiltering}    | ${anInvalidDataOutput} | ${false}
-  // ${"should fail with invalid data mapping"}                 | ${aValidDataSourcing}    | ${anInvalidDataMapping} | ${aValidDataEnrichment}    | ${aValidDataFiltering}    | ${anInvalidDataOutput} | ${false}
-  // ${"should fail with invalid data filtering"}               | ${aValidDataSourcing}    | ${anInvalidDataMapping} | ${aValidDataEnrichment}    | ${anInvalidDataFiltering} | ${anInvalidDataOutput} | ${false}
+  const anInvalidDataPipelineWithInvalidDataMapping = {
+    dataSourcing: aValidDataSourcing,
+    outputResourceName: "indexName",
+    dataTransformation: [{ dataMapping: [anInvalidDataMapping] }],
+    internalQueueTopicName: "internalQueueTopicName",
+  };
+
+  const anInvalidDataPipelineWithInvalidDataEnrichment = {
+    dataSourcing: aValidDataSourcing,
+    outputResourceName: "indexName",
+    dataTransformation: [{ dataEnrichment: anInvalidDataEnrichment }],
+    internalQueueTopicName: "internalQueueTopicName",
+  };
+
+  const anInvalidDataPipelineWithInvalidDataFilter = {
+    dataSourcing: aValidDataSourcing,
+    outputResourceName: "indexName",
+    dataTransformation: [{ dataFilter: anInvalidDataFiltering }],
+    internalQueueTopicName: "internalQueueTopicName",
+  };
+
+  const anInvalidDataPipelineWithoutInternalQueueTopicName = {
+    dataSourcing: aValidDataSourcing,
+    outputResourceName: "indexName",
+    dataTransformation: [{}],
+  };
+
+  const anInvalidDataPipelineWithoutOutputResourceName = {
+    dataSourcing: aValidDataSourcing,
+    dataTransformation: [{}],
+    internalQueueTopicName: "internalQueueTopicName",
+  };
+
+  const aMinValidDataPipeline = {
+    dataSourcing: aValidDataSourcing,
+    outputResourceName: "indexName",
+    dataTransformation: [{}],
+    internalQueueTopicName: "internalQueueTopicName",
+  };
+
+  const aMinValidDataPipelineToCompare = {
+    dataSourcing: compareValidDataSourcing,
+    outputResourceName: "indexName",
+    internalQueueTopicName: "internalQueueTopicName",
+    dataTransformation: [{}],
+  };
+
+  const aValidDataPipelineWithMapping = {
+    dataSourcing: aValidDataSourcing,
+    outputResourceName: "indexName",
+    dataTransformation: [{ dataMapping: [aValidDataMapping] }],
+    internalQueueTopicName: "internalQueueTopicName",
+  };
+
+  const aValidDataPipelineWithMappingToCompare = {
+    dataSourcing: compareValidDataSourcing,
+    outputResourceName: "indexName",
+    internalQueueTopicName: "internalQueueTopicName",
+    dataTransformation: [{ dataMapping: [aValidDataMapping] }],
+  };
+
+  const aValidDataPipelineWithEnrichment = {
+    dataSourcing: aValidDataSourcing,
+    outputResourceName: "indexName",
+    dataTransformation: [{ dataEnrichment: [aValidDataEnrichment] }],
+    internalQueueTopicName: "internalQueueTopicName",
+  };
+
+  const aValidDataPipelineWithEnrichmentToCompare = {
+    dataSourcing: compareValidDataSourcing,
+    outputResourceName: "indexName",
+    internalQueueTopicName: "internalQueueTopicName",
+    dataTransformation: [{ dataEnrichment: [aValidDataEnrichment] }],
+  };
+  const aValidDataPipelineWithFilter = {
+    dataSourcing: aValidDataSourcing,
+    outputResourceName: "indexName",
+    dataTransformation: [{ dataFilter: [aValidDataFiltering] }],
+    internalQueueTopicName: "internalQueueTopicName",
+  };
+
+  const aValidDataPipelineWithFilterToCompare = {
+    dataSourcing: compareValidDataSourcing,
+    outputResourceName: "indexName",
+    internalQueueTopicName: "internalQueueTopicName",
+    dataTransformation: [{ dataFilter: [aValidDataFiltering] }],
+  };
+
+  const aFullValidDataPipeline = {
+    dataSourcing: aValidDataSourcing,
+    outputResourceName: "indexName",
+    dataTransformation: [
+      { dataFilter: [aValidDataFiltering] },
+      { dataEnrichment: [aValidDataEnrichment] },
+      { dataMapping: [aValidDataMapping] },
+    ],
+    internalQueueTopicName: "internalQueueTopicName",
+  };
+
+  const aFullValidDataPipelineToCompare = {
+    dataSourcing: compareValidDataSourcing,
+    outputResourceName: "indexName",
+    internalQueueTopicName: "internalQueueTopicName",
+    dataTransformation: [
+      { dataFilter: [aValidDataFiltering] },
+      { dataEnrichment: [aValidDataEnrichment] },
+      { dataMapping: [aValidDataMapping] },
+    ],
+  };
+
+  const aValidQueueDataSource = {
+    connectionString: "your_connection_string_here",
+    props: {
+      clientId: "your_client_id_here",
+      groupId: "your_group_id_here",
+    },
+    queueType: "EVENT_HUB",
+    type: "QUEUE",
+  };
+
+  const aValidIndexerSinkDataSource = {
+    connectionString: "your_connection_string_here",
+    indexer: "ELASTICSEARCH",
+    type: "DATA_OUTPUT",
+  };
+
+  const anInvalidConfigurationWithoutInternalQueueDataSource = {
+    dataPipelines: [aMinValidDataPipeline],
+    sinkDataSource: aValidIndexerSinkDataSource,
+  };
+
+  const anInvalidConfigurationWithoutDataPipelines = {
+    internalQueueDataSource: aValidQueueDataSource,
+    sinkDataSource: aValidIndexerSinkDataSource,
+  };
+
+  const anInvalidConfigurationWithoutSinkDataSource = {
+    internalQueueDataSource: aValidQueueDataSource,
+    dataPipelines: [aMinValidDataPipeline],
+  };
+  it.each`
+    description                                                       | dataPipeline                                          | dataToCompare                                | success
+    ${"should decode properly with minimum valid config"}             | ${aMinValidDataPipeline}                              | ${aMinValidDataPipelineToCompare}            | ${true}
+    ${"should decode properly with valid config - only mapping"}      | ${aValidDataPipelineWithMapping}                      | ${aValidDataPipelineWithMappingToCompare}    | ${true}
+    ${"should decode properly with valid config - only enrichment"}   | ${aValidDataPipelineWithEnrichment}                   | ${aValidDataPipelineWithEnrichmentToCompare} | ${true}
+    ${"should decode properly with valid config - only filtering"}    | ${aValidDataPipelineWithFilter}                       | ${aValidDataPipelineWithFilterToCompare}     | ${true}
+    ${"should decode properly with a full valid config"}              | ${aFullValidDataPipeline}                             | ${aFullValidDataPipelineToCompare}           | ${true}
+    ${"should decode properly with a missing dataSource"}             | ${anInvalidDataPipelineWithoutDataSourcing}           | ${aFullValidDataPipelineToCompare}           | ${false}
+    ${"should decode properly with an invalid dataSource"}            | ${anInvalidDataPipelineWithInvalidDataSourcing}       | ${aFullValidDataPipelineToCompare}           | ${false}
+    ${"should decode properly with an invalid dataMapping"}           | ${anInvalidDataPipelineWithInvalidDataMapping}        | ${aFullValidDataPipelineToCompare}           | ${false}
+    ${"should decode properly with an invalid dataEnrichment"}        | ${anInvalidDataPipelineWithInvalidDataEnrichment}     | ${aFullValidDataPipelineToCompare}           | ${false}
+    ${"should decode properly with an invalid dataFilter"}            | ${anInvalidDataPipelineWithInvalidDataFilter}         | ${aFullValidDataPipelineToCompare}           | ${false}
+    ${"should decode properly with a missing internalQueueTopicName"} | ${anInvalidDataPipelineWithoutInternalQueueTopicName} | ${aFullValidDataPipelineToCompare}           | ${false}
+    ${"should decode properly with a missing outputResourceName"}     | ${anInvalidDataPipelineWithoutOutputResourceName}     | ${aFullValidDataPipelineToCompare}           | ${false}
+  `("$description", ({ dataPipeline, dataToCompare, success }) => {
+    const configuration = {
+      internalQueueDataSource: aValidQueueDataSource,
+      dataPipelines: [dataPipeline],
+      sinkDataSource: aValidIndexerSinkDataSource,
+    };
+    pipe(
+      configuration,
+      Configuration.decode,
+      E.fold(
+        (errors) => {
+          console.log(
+            errors.map((error) =>
+              error.context.map(({ key }) => key).join("."),
+            ),
+          );
+          expect(success).toBeFalsy();
+        },
+        (decoded) =>
+          expect(decoded).toMatchObject({
+            internalQueueDataSource: aValidQueueDataSource,
+            dataPipelines: [dataToCompare],
+            sinkDataSource: aValidIndexerSinkDataSource,
+          }),
+      ),
+    );
+  });
 
   it.each`
-    description | dataSourcing | dataTransformation | dataOutput | dataToCompare | success
-    ${"should decode properly with minimum valid config"} | ${aValidDataSourcing} | ${[aValidEmptyTransformationStep]} | ${aValidDataOutput} | ${{
-  dataSourcing: compareValidDataSourcing,
-  dataTransformation: [aValidEmptyTransformationStep],
-  dataOutput: aValidDataOutput,
-}} | ${true}
-    ${"should decode properly with valid config with only mapping"} | ${aValidDataSourcing} | ${[aValidTransformationStepWithOnlyMapping]} | ${aValidDataOutput} | ${{
-  dataSourcing: compareValidDataSourcing,
-  dataTransformation: [aValidTransformationStepWithOnlyMapping],
-  dataOutput: aValidDataOutput,
-}} | ${true}
-    ${"should decode properly with valid config with only enrichment"} | ${aValidDataSourcing} | ${[aValidTransformationStepWithOnlyEnrichment]} | ${aValidDataOutput} | ${{
-  dataSourcing: compareValidDataSourcing,
-  dataTransformation: [aValidTransformationStepWithOnlyEnrichment],
-  dataOutput: aValidDataOutput,
-}} | ${true}
-    ${"should decode properly with valid config with only filtering"} | ${aValidDataSourcing} | ${[aValidTransformationStepWithOnlyFiltering]} | ${aValidDataOutput} | ${{
-  dataSourcing: compareValidDataSourcing,
-  dataTransformation: [aValidTransformationStepWithOnlyFiltering],
-  dataOutput: aValidDataOutput,
-}} | ${true}
-    ${"should decode properly with valid config with full steps"} | ${aValidDataSourcing} | ${[aValidTransformationStep]} | ${aValidDataOutput} | ${{
-  dataSourcing: compareValidDataSourcing,
-  dataTransformation: [aValidTransformationStep],
-  dataOutput: aValidDataOutput,
-}} | ${true}
-  `(
-    "$description",
-    ({
-      dataSourcing,
-      dataTransformation,
-      dataOutput,
-      dataToCompare,
-      success,
-    }) => {
-      const dataPipelineConfig = {
-        dataSourcing,
-        dataTransformation,
-        dataOutput,
-      };
-
-      pipe(
-        dataPipelineConfig,
-        DataPipeline.decode,
-        E.fold(
-          (errors) => {
-            console.log(
-              errors.map((error) =>
-                error.context.map(({ key }) => key).join("."),
-              ),
-            );
-            expect(success).toBeFalsy();
-          },
-          (decoded) => expect(decoded).toMatchObject(dataToCompare),
-        ),
-      );
-    },
-  );
+    description                                                              | configuration                                           | success
+    ${"should decode invalid configuration without internalQueueDataSource"} | ${anInvalidConfigurationWithoutInternalQueueDataSource} | ${false}
+    ${"should decode invalid configuration without DataPipelines"}           | ${anInvalidConfigurationWithoutDataPipelines}           | ${false}
+    ${"should decode invalid configuration without SinkDataSource"}          | ${anInvalidConfigurationWithoutSinkDataSource}          | ${false}
+  `("$description", ({ configuration, success }) => {
+    pipe(
+      configuration,
+      Configuration.decode,
+      E.fold(
+        (errors) => {
+          console.log(
+            errors.map((error) =>
+              error.context.map(({ key }) => key).join("."),
+            ),
+          );
+          expect(success).toBeFalsy();
+        },
+        (decoded) => expect(decoded).toMatchObject(configuration),
+      ),
+    );
+  });
 });

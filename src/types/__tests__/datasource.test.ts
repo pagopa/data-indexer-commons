@@ -7,53 +7,12 @@ import {
   CDCConnectionSourceType,
   CDCDataSource,
   CosmosDBType,
-  DataSource,
   MongoDBType,
   PostgreSQLDBType,
   QueueDataSource,
   SelectAllConnectionSourceType,
   SelectAllDataSource,
 } from "../datasource/datasource";
-
-describe("DataSource", () => {
-  const aProperDatasourceConfig = {
-    connectionString: "foo",
-    type: "DB",
-    dbType: "CosmosDB",
-    sourceType: "CDC",
-    props: {
-      collectionName: "collName",
-      dbName: "dbName",
-      leaseContainerName: "lease",
-    },
-  };
-  it("should decode a correct datasource config properly", () => {
-    pipe(
-      aProperDatasourceConfig,
-      DataSource.decode,
-      E.map((decoded) => expect(decoded).toEqual(aProperDatasourceConfig)),
-      E.mapLeft(() => fail("Cannot decode a correct Datasource")),
-    );
-  });
-
-  it("should fail while decoding an empty datasource config", () => {
-    pipe(
-      {},
-      DataSource.decode,
-      E.map(() => fail("An empty datasource config should not be decoded")),
-      E.mapLeft((errs) => expect(errs).toBeDefined()),
-    );
-  });
-
-  it("should fail while decoding an incorrect datasource config", () => {
-    pipe(
-      { ...aProperDatasourceConfig, type: "OTHER" },
-      DataSource.decode,
-      E.map(() => fail("An incorrect datasource config should not be decoded")),
-      E.mapLeft((errs) => expect(errs).toBeDefined()),
-    );
-  });
-});
 
 describe("CDCDatasource", () => {
   const aCosmosCdcDatasourceConfig = {

@@ -225,6 +225,8 @@ export const QueueDataSourceConfig = t.exact(
   }),
 );
 
+export type QueueDataSourceConfig = t.TypeOf<typeof QueueDataSourceConfig>;
+
 export const QueueDataSource = t.intersection([
   DataSourceConnectionCommon,
   QueueDataSourceConfig,
@@ -262,11 +264,3 @@ export const BlobStorageDataSource = t.intersection([
 ]);
 
 export type BlobStorageDataSource = t.TypeOf<typeof BlobStorageDataSource>;
-
-export const DataSource = t.union([
-  DBDataSource,
-  QueueDataSource,
-  BlobStorageDataSource,
-]);
-
-export type DataSource = t.TypeOf<typeof DataSource>;
