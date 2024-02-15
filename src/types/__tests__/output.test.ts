@@ -8,7 +8,7 @@ describe("DataOutput", () => {
       indexName: "indexName",
       type: "DATA_OUTPUT",
       indexer: "ELASTICSEARCH",
-      deduplicationStrategy: "TIMESTAMP",
+      deduplicationStrategy: "INDEXER",
     };
     const result = DataOutput.decode(validData);
     expect(E.isRight(result)).toBeTruthy();

@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys */
 import * as t from "io-ts";
-import { DataSource } from "../datasource/datasource";
+import { StreamDataSource } from "../datasource/stream";
 import { EnrichmentDataSource } from "../enrichment/enrichment";
 import { DataFilter } from "../filtering/filter";
 import { MultipleInputMapping } from "../mapping/multipleInput";
@@ -8,21 +8,25 @@ import { SelectInputMapping } from "../mapping/selectInput";
 import { SingleInputMapping } from "../mapping/singleInput";
 import { DataOutput } from "../output/output";
 
-const DataMapping = t.partial({
-  singleInput: SingleInputMapping,
-  multipleInput: MultipleInputMapping,
-  seletInput: SelectInputMapping,
-});
+const DataMapping = t.union([
+  SingleInputMapping,
+  MultipleInputMapping,
+  SelectInputMapping,
+]);
 
 export type DataMapping = t.TypeOf<typeof DataMapping>;
 
-const DataEnrichment = t.partial({ EnrichmentDataSource });
+export const DataTransformationStep = t.array(
+  t.partial({
+    dataMapping: t.array(DataMapping),
+    dataEnrichment: t.array(EnrichmentDataSource),
+    dataFilter: t.array(DataFilter),
+  }),
+);
 
 export const DataPipeline = t.type({
-  dataSourcing: DataSource,
-  dataMapping: DataMapping,
-  dataEnrichment: DataEnrichment,
-  dataFiltering: DataFilter,
+  dataSourcing: StreamDataSource,
+  dataTransformation: DataTransformationStep,
   dataOutput: DataOutput,
 });
 

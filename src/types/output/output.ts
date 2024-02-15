@@ -2,7 +2,7 @@ import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 import * as t from "io-ts";
 
 const DeduplicationStrategy = t.partial({
-  deduplicationStrategy: t.literal("TIMESTAMP"),
+  deduplicationStrategy: t.literal("INDEXER"),
 });
 
 const DataOutputConfig = t.type({

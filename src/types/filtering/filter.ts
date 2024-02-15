@@ -12,7 +12,13 @@ export const DataFilter = t.partial({
     lt: null,
     lte: null,
   }),
-  staticValue: t.union([NonEmptyString, t.number, t.boolean]),
+  staticValue: t.union([
+    NonEmptyString,
+    t.number,
+    t.boolean,
+    t.null,
+    t.undefined,
+  ]),
 });
 
 export type DataFilter = t.TypeOf<typeof DataFilter>;
