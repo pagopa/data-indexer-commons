@@ -1,13 +1,13 @@
 import * as E from "fp-ts/Either";
-import { DataPipeline } from "../types/configuration/configuration";
-import { decodeJSON, readJSON } from "./configuration";
+import { Configuration } from "../types/configuration/configuration";
+import { decodeConfiguration, readAndParseEnv } from "./configuration";
 
 interface IJSONService {
-  readonly read: (path: string) => E.Either<Error, unknown>;
-  readonly decode: (json: unknown) => E.Either<Error, DataPipeline>;
+  readonly read: (env: string) => E.Either<Error, unknown>;
+  readonly decode: (json: unknown) => E.Either<Error, Configuration>;
 }
 
 export const JSONService: IJSONService = {
-  decode: decodeJSON,
-  read: readJSON,
+  decode: decodeConfiguration,
+  read: readAndParseEnv,
 } satisfies IJSONService;
