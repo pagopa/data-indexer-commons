@@ -1,6 +1,10 @@
 import * as E from "fp-ts/Either";
 import { Configuration } from "../../types/configuration/configuration";
-import { decodeConfiguration, readAndParseEnv } from "../configuration";
+import {
+  JSON_CONF_VAR_NAME,
+  decodeConfiguration,
+  readAndParseEnv,
+} from "../service";
 
 jest.mock("../../types/configuration/configuration", () => ({
   Configuration: {
@@ -8,12 +12,11 @@ jest.mock("../../types/configuration/configuration", () => ({
   },
 }));
 
-const envVariable = "CONFIGURATION";
 const jsonData = { key: "value" };
 const jsonFileContent = JSON.stringify(jsonData);
 
 beforeAll(() => {
-  process.env[envVariable] = jsonFileContent;
+  process.env[JSON_CONF_VAR_NAME] = jsonFileContent;
 });
 
 describe("readAndParseEnv", () => {
@@ -22,17 +25,15 @@ describe("readAndParseEnv", () => {
   });
 
   it("should read and parse JSON file successfully", () => {
-    expect(readAndParseEnv(envVariable)).toEqual(E.right(jsonData));
+    expect(readAndParseEnv()).toEqual(E.right(jsonData));
   });
 
   it("should return Left with error if reading or parsing fails", () => {
-    process.env[envVariable] = "invalid-json";
+    process.env[JSON_CONF_VAR_NAME] = "invalid-json";
 
-    const result = readAndParseEnv(envVariable);
+    const result = readAndParseEnv();
 
-    expect(result).toEqual(
-      E.left(new Error("Error during JSON reading and parsing")),
-    );
+    expect(result).toEqual(E.left(new Error("Error during JSON reading")));
   });
 });
 
