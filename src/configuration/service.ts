@@ -1,27 +1,32 @@
 /* eslint-disable no-console */
+import { errorsToReadableMessages } from "@pagopa/ts-commons/lib/reporters";
 import * as E from "fp-ts/Either";
+import * as J from "fp-ts/Json";
 import { pipe } from "fp-ts/lib/function";
 import * as t from "io-ts";
 import { NonEmptyString } from "io-ts-types/lib/NonEmptyString";
 import { Configuration } from "../types/configuration/configuration";
 
-export const JSON_CONF_VAR_NAME = "JSON_CONFIGURATION";
-export type JSONConfiguration = t.TypeOf<typeof JSONConfiguration>;
-export const JSONConfiguration = t.type({
-  JSON_CONFIGURATION: NonEmptyString,
+export const CONFIG_VAR_NAME = "CONFIGURATION";
+export type EnvConfiguration = t.TypeOf<typeof EnvConfiguration>;
+export const EnvConfiguration = t.type({
+  CONFIGURATION: NonEmptyString,
 });
 
-export const getConfigOrThrow = (): E.Either<Error, JSONConfiguration> =>
+export const getConfigOrThrow = (): E.Either<Error, EnvConfiguration> =>
   pipe(
-    E.tryCatch(
-      () =>
-        JSONConfiguration.decode({
-          ...process.env,
-        }),
-      E.toError,
-    ),
-    E.getOrElse(() => {
-      throw new Error(`Invalid configuration`);
+    EnvConfiguration.decode({
+      ...process.env,
+      CONFIGURATION: pipe(
+        process.env[CONFIG_VAR_NAME],
+        J.parse,
+        E.getOrElse(() => ""),
+      ),
+    }),
+    E.mapLeft((errs) => {
+      throw new Error(
+        `Invalid configuration|ERROR=${errorsToReadableMessages(errs)}`,
+      );
     }),
   );
 
@@ -31,7 +36,7 @@ export const readAndParseEnv = (): E.Either<Error, unknown> =>
     E.chain((conf) =>
       E.tryCatch(() => {
         console.log(conf);
-        return JSON.parse(conf.JSON_CONFIGURATION);
+        return JSON.parse(conf.CONFIGURATION);
       }, E.toError),
     ),
     E.mapLeft(() => new Error(`Error during JSON reading`)),

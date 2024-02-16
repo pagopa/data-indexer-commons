@@ -1,7 +1,7 @@
 import * as E from "fp-ts/Either";
 import { Configuration } from "../../types/configuration/configuration";
 import {
-  JSON_CONF_VAR_NAME,
+  CONFIG_VAR_NAME,
   decodeConfiguration,
   readAndParseEnv,
 } from "../service";
@@ -13,10 +13,9 @@ jest.mock("../../types/configuration/configuration", () => ({
 }));
 
 const jsonData = { key: "value" };
-const jsonFileContent = JSON.stringify(jsonData);
 
 beforeAll(() => {
-  process.env[JSON_CONF_VAR_NAME] = jsonFileContent;
+  process.env[CONFIG_VAR_NAME] = JSON.stringify(jsonData);
 });
 
 describe("readAndParseEnv", () => {
@@ -29,7 +28,7 @@ describe("readAndParseEnv", () => {
   });
 
   it("should return Left with error if reading or parsing fails", () => {
-    process.env[JSON_CONF_VAR_NAME] = "invalid-json";
+    process.env[CONFIG_VAR_NAME] = "invalid-json";
 
     const result = readAndParseEnv();
 
