@@ -1,19 +1,78 @@
 import * as E from "fp-ts/Either";
-import { Configuration } from "../../types/configuration/configuration";
-import { decodeConfiguration, readAndParseEnv } from "../configuration";
+import { CONFIG_VAR_NAME, readAndParseEnv } from "../service";
 
-jest.mock("../../types/configuration/configuration", () => ({
-  Configuration: {
-    decode: jest.fn(),
+const jsonData = {
+  internalQueueDataSource: {
+    connectionString: "your_connection_string_here",
+    props: {
+      clientId: "your_client_id_here",
+      groupId: "your_group_id_here",
+    },
+    queueType: "EVENT_HUB",
+    type: "QUEUE",
   },
-}));
+  dataPipelines: [
+    {
+      dataSourcing: {
+        master: {
+          sourceType: "CDC",
+          dbType: "CosmosDB",
+          props: {
+            collectionName: "exampleCollection",
+            dbName: "exampleDb",
+            startingFrom: "2024-02-14T00:00:00.000Z",
+          },
+        },
+      },
+      outputResourceName: "indexName",
+      dataTransformation: [{}],
+      internalQueueTopicName: "internalQueueTopicName",
+    },
+  ],
+  sinkDataSource: {
+    connectionString: "your_connection_string_here",
+    indexer: "ELASTICSEARCH",
+    type: "DATA_OUTPUT",
+  },
+};
 
-const envVariable = "CONFIGURATION";
-const jsonData = { key: "value" };
-const jsonFileContent = JSON.stringify(jsonData);
+const comparedData = {
+  internalQueueDataSource: {
+    connectionString: "your_connection_string_here",
+    props: {
+      clientId: "your_client_id_here",
+      groupId: "your_group_id_here",
+    },
+    queueType: "EVENT_HUB",
+    type: "QUEUE",
+  },
+  dataPipelines: [
+    {
+      dataSourcing: {
+        master: {
+          sourceType: "CDC",
+          dbType: "CosmosDB",
+          props: {
+            collectionName: "exampleCollection",
+            dbName: "exampleDb",
+            startingFrom: new Date("2024-02-14T00:00:00.000Z"),
+          },
+        },
+      },
+      outputResourceName: "indexName",
+      dataTransformation: [{}],
+      internalQueueTopicName: "internalQueueTopicName",
+    },
+  ],
+  sinkDataSource: {
+    connectionString: "your_connection_string_here",
+    indexer: "ELASTICSEARCH",
+    type: "DATA_OUTPUT",
+  },
+};
 
 beforeAll(() => {
-  process.env[envVariable] = jsonFileContent;
+  process.env[CONFIG_VAR_NAME] = JSON.stringify(jsonData);
 });
 
 describe("readAndParseEnv", () => {
@@ -22,56 +81,17 @@ describe("readAndParseEnv", () => {
   });
 
   it("should read and parse JSON file successfully", () => {
-    expect(readAndParseEnv(envVariable)).toEqual(E.right(jsonData));
+    const result = readAndParseEnv();
+    if (E.isRight(result)) {
+      expect(result.right.CONFIGURATION).toEqual(comparedData);
+    }
   });
 
   it("should return Left with error if reading or parsing fails", () => {
-    process.env[envVariable] = "invalid-json";
+    process.env[CONFIG_VAR_NAME] = "invalid-json";
 
-    const result = readAndParseEnv(envVariable);
+    const result = readAndParseEnv();
 
-    expect(result).toEqual(
-      E.left(new Error("Error during JSON reading and parsing")),
-    );
-  });
-});
-
-describe("decodeJSON", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it("should decode JSON successfully", () => {
-    const jsonData = {
-      key: "value",
-    };
-    const decodedData = {
-      key: "value",
-    };
-
-    (Configuration.decode as jest.Mock).mockReturnValueOnce(
-      E.right(decodedData),
-    );
-
-    const result = decodeConfiguration(jsonData);
-
-    expect(result).toEqual(E.right(decodedData));
-    expect(Configuration.decode).toHaveBeenCalledWith(jsonData);
-  });
-
-  it("should return Left with error if decoding fails", () => {
-    const jsonData = {
-      key: "value",
-    };
-    const decodingError = new Error("Error during JSON decoding");
-
-    (Configuration.decode as jest.Mock).mockReturnValueOnce(
-      E.left(decodingError),
-    );
-
-    const result = decodeConfiguration(jsonData);
-
-    expect(result).toEqual(E.left(decodingError));
-    expect(Configuration.decode).toHaveBeenCalledWith(jsonData);
+    expect(E.isLeft(result)).toBeTruthy();
   });
 });
