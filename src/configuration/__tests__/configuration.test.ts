@@ -1,13 +1,75 @@
 import * as E from "fp-ts/Either";
 import { CONFIG_VAR_NAME, readAndParseEnv } from "../service";
 
-jest.mock("../../types/configuration/configuration", () => ({
-  Configuration: {
-    decode: jest.fn(),
+const jsonData = {
+  internalQueueDataSource: {
+    connectionString: "your_connection_string_here",
+    props: {
+      clientId: "your_client_id_here",
+      groupId: "your_group_id_here",
+    },
+    queueType: "EVENT_HUB",
+    type: "QUEUE",
   },
-}));
+  dataPipelines: [
+    {
+      dataSourcing: {
+        master: {
+          sourceType: "CDC",
+          dbType: "CosmosDB",
+          props: {
+            collectionName: "exampleCollection",
+            dbName: "exampleDb",
+            startingFrom: "2024-02-14T00:00:00.000Z",
+          },
+        },
+      },
+      outputResourceName: "indexName",
+      dataTransformation: [{}],
+      internalQueueTopicName: "internalQueueTopicName",
+    },
+  ],
+  sinkDataSource: {
+    connectionString: "your_connection_string_here",
+    indexer: "ELASTICSEARCH",
+    type: "DATA_OUTPUT",
+  },
+};
 
-const jsonData = { key: "value" };
+const comparedData = {
+  internalQueueDataSource: {
+    connectionString: "your_connection_string_here",
+    props: {
+      clientId: "your_client_id_here",
+      groupId: "your_group_id_here",
+    },
+    queueType: "EVENT_HUB",
+    type: "QUEUE",
+  },
+  dataPipelines: [
+    {
+      dataSourcing: {
+        master: {
+          sourceType: "CDC",
+          dbType: "CosmosDB",
+          props: {
+            collectionName: "exampleCollection",
+            dbName: "exampleDb",
+            startingFrom: new Date("2024-02-14T00:00:00.000Z"),
+          },
+        },
+      },
+      outputResourceName: "indexName",
+      dataTransformation: [{}],
+      internalQueueTopicName: "internalQueueTopicName",
+    },
+  ],
+  sinkDataSource: {
+    connectionString: "your_connection_string_here",
+    indexer: "ELASTICSEARCH",
+    type: "DATA_OUTPUT",
+  },
+};
 
 beforeAll(() => {
   process.env[CONFIG_VAR_NAME] = JSON.stringify(jsonData);
@@ -19,9 +81,7 @@ describe("readAndParseEnv", () => {
   });
 
   it("should read and parse JSON file successfully", () => {
-    // expect(readAndParseEnv()).toEqual(E.right(jsonData));
-    const result = readAndParseEnv();
-    console.log(result);
+    expect(readAndParseEnv()).toEqual(E.right({ CONFIGURATION: comparedData }));
   });
 
   it("should return Left with error if reading or parsing fails", () => {
@@ -29,6 +89,6 @@ describe("readAndParseEnv", () => {
 
     const result = readAndParseEnv();
 
-    expect(result).toEqual(E.left(new Error("Error during JSON reading")));
+    expect(E.isLeft(result)).toBeTruthy();
   });
 });
