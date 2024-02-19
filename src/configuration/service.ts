@@ -16,6 +16,7 @@ export type EnvConfiguration = t.TypeOf<typeof EnvConfiguration>;
 export const readAndParseEnv = (): E.Either<Error, EnvConfiguration> =>
   pipe(
     EnvConfiguration.decode({
+      ...process.env,
       CONFIGURATION: pipe(
         process.env[CONFIG_VAR_NAME],
         J.parse,

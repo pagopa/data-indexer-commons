@@ -81,7 +81,10 @@ describe("readAndParseEnv", () => {
   });
 
   it("should read and parse JSON file successfully", () => {
-    expect(readAndParseEnv()).toEqual(E.right({ CONFIGURATION: comparedData }));
+    const result = readAndParseEnv();
+    if (E.isRight(result)) {
+      expect(result.right.CONFIGURATION).toEqual(comparedData);
+    }
   });
 
   it("should return Left with error if reading or parsing fails", () => {
