@@ -1,8 +1,8 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
-import { EnrichmentDataSource } from "../enrichment/datasource";
+import { EnrichmentDataSource } from "../enrichment/enrichment";
 
-describe("EnrichmentDataSource", () => {
+describe("DataEnrichment", () => {
   const aBlobStorageParams = {
     blobFilename: "file.txt",
     connectionString: "blob_connection_string",

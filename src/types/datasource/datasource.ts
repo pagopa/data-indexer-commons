@@ -1,11 +1,11 @@
+import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates";
 import {
   NonNegativeInteger,
   WithinRangeInteger,
 } from "@pagopa/ts-commons/lib/numbers";
-import * as t from "io-ts";
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
-import { IsoDateFromString } from "@pagopa/ts-commons/lib/dates";
 import { withDefault } from "@pagopa/ts-commons/lib/types";
+import * as t from "io-ts";
 
 export const CosmosDBType = t.literal("CosmosDB");
 export type CosmosDBType = t.TypeOf<typeof CosmosDBType>;
@@ -225,6 +225,8 @@ export const QueueDataSourceConfig = t.exact(
   }),
 );
 
+export type QueueDataSourceConfig = t.TypeOf<typeof QueueDataSourceConfig>;
+
 export const QueueDataSource = t.intersection([
   DataSourceConnectionCommon,
   QueueDataSourceConfig,
@@ -262,11 +264,3 @@ export const BlobStorageDataSource = t.intersection([
 ]);
 
 export type BlobStorageDataSource = t.TypeOf<typeof BlobStorageDataSource>;
-
-export const DataSource = t.union([
-  DBDataSource,
-  QueueDataSource,
-  BlobStorageDataSource,
-]);
-
-export type DataSource = t.TypeOf<typeof DataSource>;

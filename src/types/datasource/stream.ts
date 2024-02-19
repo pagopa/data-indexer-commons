@@ -3,7 +3,7 @@ import {
   CDCDataSource,
   SelectAllMongoDataSource,
   SelectAllPostgresDataSource,
-} from "../types/datasource";
+} from "./datasource";
 
 export const MasterStreamDataSource = t.type({
   master: CDCDataSource,

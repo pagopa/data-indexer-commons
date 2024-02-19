@@ -1,5 +1,5 @@
-export * from "./types/datasource";
-export * from "./types/stream";
+export * from "./types/datasource/datasource";
+export * from "./types/datasource/stream";
 export * from "./types/mapping/boolean";
 export * from "./types/mapping/date";
 export * from "./types/mapping/flatten";
