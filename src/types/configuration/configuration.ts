@@ -1,7 +1,7 @@
 /* eslint-disable sort-keys */
 import * as t from "io-ts";
 import { NonEmptyString } from "io-ts-types/lib/NonEmptyString";
-import { ExcludeFieldsMapping } from "mapping/excludeInput";
+import { ExcludeFieldsMapping } from "../mapping/excludeInput";
 import { QueueDataSource } from "../datasource/datasource";
 import { StreamDataSource } from "../datasource/stream";
 import { EnrichmentDataSource } from "../enrichment/enrichment";
