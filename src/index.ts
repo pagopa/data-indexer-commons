@@ -9,5 +9,6 @@ export * from "./types/mapping/multipleInputOutput";
 export * from "./types/mapping/number";
 export * from "./types/mapping/renameField";
 export * from "./types/mapping/selectFields";
+export * from "./types/mapping/excludeInput";
 export * from "./types/mapping/selectInput";
 export * from "./types/mapping/string";
