@@ -12,3 +12,5 @@ export * from "./types/mapping/selectFields";
 export * from "./types/mapping/excludeInput";
 export * from "./types/mapping/selectInput";
 export * from "./types/mapping/string";
+export * from "./types/configuration/configuration";
+export * from "./configuration/service"
