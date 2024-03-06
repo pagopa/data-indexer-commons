@@ -55,6 +55,7 @@ export const DateMapping = t.union([
 export type DateMapping = t.TypeOf<typeof DateMapping>;
 
 export const ConvertFormatMapping = t.type({
+  mapper: t.literal("CONVERT_FORMAT"),
   output: OutputFormat,
 });
 

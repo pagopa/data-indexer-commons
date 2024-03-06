@@ -4,6 +4,7 @@ import { SwitchCaseMapping } from "../case";
 describe("SwitchCaseMapping", () => {
   it("should validate the cases and defaultValue properties", () => {
     const validMapping = {
+      mapper: "SWITCH_CASE",
       cases: {
         case1: "value1",
         case2: "value2"

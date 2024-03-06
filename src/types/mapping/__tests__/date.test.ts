@@ -47,7 +47,7 @@ describe("DateMapping", () => {
   it("should decode a valid ConvertFormatMapping type properly", () => {
     const validData = {
       mapper: "CONVERT_FORMAT",
-      output: "yyyy-MM-dd"
+      output: "yyyy-MM-dd",
     };
     const res = ConvertFormatMapping.decode(validData);
     expect(E.isRight(res)).toBeTruthy();
