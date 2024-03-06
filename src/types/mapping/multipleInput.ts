@@ -35,3 +35,4 @@ export const MultipleInputMergeFieldMapping = t.intersection([
 ]);
 
 export const MultipleInputMapping = MultipleInputMergeFieldMapping;
+export type MultipleInputMapping = t.TypeOf<typeof MultipleInputMapping>;

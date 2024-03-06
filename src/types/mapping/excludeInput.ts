@@ -17,6 +17,10 @@ export const ExcludeInputExcludeFieldsMapping = t.intersection([
   ExcludeFieldsMapping,
 ]);
 
+export type ExcludeInputExcludeFieldsMapping = t.TypeOf<
+  typeof ExcludeInputExcludeFieldsMapping
+>;
+
 export const ExcludeInputMapping = ExcludeInputExcludeFieldsMapping;
 
 export type ExcludeInputMapping = t.TypeOf<typeof ExcludeInputMapping>;
