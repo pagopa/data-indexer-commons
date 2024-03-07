@@ -1,12 +1,12 @@
 import * as t from "io-ts";
 
-const BooleanToStringMapping = t.type({
+export const BooleanToStringMapping = t.type({
   falseString: t.string,
   mapper: t.literal("BOOLEAN_TO_STRING"),
   trueString: t.string,
 });
 
-type BooleanToStringMapping = t.TypeOf<typeof BooleanToStringMapping>;
+export type BooleanToStringMapping = t.TypeOf<typeof BooleanToStringMapping>;
 
 export const BooleanMapping = BooleanToStringMapping;
 

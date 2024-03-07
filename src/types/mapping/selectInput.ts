@@ -2,7 +2,7 @@ import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 import * as t from "io-ts";
 import { SelectFieldsMapping } from "./selectFields";
 
-const SelectInputConfig = t.type({
+export const SelectInputConfig = t.type({
   fields: t.readonlyArray(NonEmptyString),
   type: t.literal("SELECT_INPUT"),
 });

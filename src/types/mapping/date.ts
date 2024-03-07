@@ -8,39 +8,39 @@ export const OutputFormat = t.union([
 
 export type OutputFormat = t.TypeOf<typeof OutputFormat>;
 
-const DateStringToUtcFormatMapping = t.type({
+export const DateStringToUtcFormatMapping = t.type({
   mapper: t.literal("DATE_TO_UTC"),
 });
 
-type DateStringToUtcFormatMapping = t.TypeOf<
+export type DateStringToUtcFormatMapping = t.TypeOf<
   typeof DateStringToUtcFormatMapping
 >;
 
-const IsoToUtcFormatMapping = t.type({
+export const IsoToUtcFormatMapping = t.type({
   mapper: t.literal("ISO_TO_UTC"),
 });
 
-type IsoToUtcFormatMapping = t.TypeOf<typeof IsoToUtcFormatMapping>;
+export type IsoToUtcFormatMapping = t.TypeOf<typeof IsoToUtcFormatMapping>;
 
-const DateStringToIsoFormatMapping = t.type({
+export const DateStringToIsoFormatMapping = t.type({
   mapper: t.literal("DATE_TO_ISO"),
 });
-type DateStringToIsoFormatMapping = t.TypeOf<
+export type DateStringToIsoFormatMapping = t.TypeOf<
   typeof DateStringToIsoFormatMapping
 >;
 
-const DateStringToTimestampFormatMapping = t.type({
+export const DateStringToTimestampFormatMapping = t.type({
   mapper: t.literal("DATE_TO_TIMESTAMP"),
 });
-type DateStringToTimestampFormatMapping = t.TypeOf<
+export type DateStringToTimestampFormatMapping = t.TypeOf<
   typeof DateStringToTimestampFormatMapping
 >;
 
-const DateStringFromTimestampFormatMapping = t.type({
+export const DateStringFromTimestampFormatMapping = t.type({
   mapper: t.literal("DATE_FROM_TIMESTAMP"),
 });
 
-type DateStringFromTimestampFormatMapping = t.TypeOf<
+export type DateStringFromTimestampFormatMapping = t.TypeOf<
   typeof DateStringFromTimestampFormatMapping
 >;
 
