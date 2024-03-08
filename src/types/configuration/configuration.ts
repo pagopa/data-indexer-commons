@@ -11,7 +11,7 @@ import { SelectInputMapping } from "../mapping/selectInput";
 import { SingleInputMapping } from "../mapping/singleInput";
 import { IndexerSinkDataSource } from "../output/output";
 
-const DataMapping = t.union([
+export const DataMapping = t.union([
   SingleInputMapping,
   MultipleInputMapping,
   SelectInputMapping,
@@ -26,7 +26,7 @@ export const DataTransformationStep = t.partial({
   dataFilter: t.readonlyArray(DataFilter),
 });
 
-const DataTransformation = t.readonlyArray(DataTransformationStep);
+export const DataTransformation = t.readonlyArray(DataTransformationStep);
 export type DataTransformation = t.TypeOf<typeof DataTransformation>;
 
 export const DataPipeline = t.type({
