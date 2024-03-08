@@ -11,6 +11,9 @@ export const SelectInputSelectFieldsMapping = t.intersection([
   SelectInputConfig,
   SelectFieldsMapping,
 ]);
+export type SelectInputSelectFieldsMapping = t.TypeOf<
+  typeof SelectInputSelectFieldsMapping
+>;
 
 export const SelectInputMapping = SelectInputSelectFieldsMapping;
 
