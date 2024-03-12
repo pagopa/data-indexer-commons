@@ -1,7 +1,6 @@
 /* eslint-disable sort-keys */
 import { NonEmptyString } from "@pagopa/ts-commons/lib/strings";
 import * as t from "io-ts";
-import { nonEmptyArray } from "io-ts-types";
 
 const APIParams = t.type({
   authentication: t.partial({
@@ -56,7 +55,7 @@ export const CommonFindDbParams = t.intersection([
     streamKeyFieldName: NonEmptyString,
   }),
   t.partial({
-    selectFields: nonEmptyArray(NonEmptyString),
+    selectFields: t.readonlyArray(NonEmptyString),
   }),
 ]);
 
