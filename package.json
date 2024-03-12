@@ -1,6 +1,6 @@
 {
   "name": "@pagopa/data-indexer-commons",
-  "version": "0.2.4",
+  "version": "0.2.7",
   "description": "Common library for io-platform data-indexer",
   "author": "IO Platform team",
   "license": "MIT",
