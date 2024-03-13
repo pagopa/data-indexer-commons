@@ -27,6 +27,7 @@ const DataFilterStaticConditions = t.union([
       t.literal("isUndefined"),
       t.literal("isNotUndefined"),
     ]),
+    staticValue: t.union([t.undefined, t.never]),
   }),
 ]);
 
