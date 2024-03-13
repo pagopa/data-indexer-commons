@@ -46,28 +46,108 @@ export const API = t.type({
 
 const CommonDBParams = t.type({
   connectionString: NonEmptyString,
-  id: NonEmptyString,
-  query: NonEmptyString,
+  dbResourceName: NonEmptyString,
 });
 
-const CosmosDBParams = t.intersection([
-  CommonDBParams,
+export const CommonFindDbParams = t.intersection([
   t.type({
-    partitionKey: NonEmptyString,
+    dbResourceKeyFieldName: NonEmptyString,
+    streamKeyFieldName: NonEmptyString,
+  }),
+  t.partial({
+    selectFields: t.readonlyArray(NonEmptyString),
   }),
 ]);
 
-const DB = t.union([
-  t.type({ type: t.literal("CosmosDB"), params: CosmosDBParams }),
-  t.type({ type: t.literal("MongoDB"), params: CommonDBParams }),
-  t.type({ type: t.literal("PosgresDB"), params: CommonDBParams }),
+export type CommonFindDbParams = t.TypeOf<typeof CommonFindDbParams>;
+
+export const RelationalModelFindByKeyParams = t.intersection([
+  CommonFindDbParams,
+  t.type({
+    queryType: t.literal("FIND_BY_KEY"),
+  }),
 ]);
+export type RelationalModelFindByKeyParams = t.TypeOf<
+  typeof RelationalModelFindByKeyParams
+>;
+
+export const DocumentModelQueryParams = t.intersection([
+  CommonFindDbParams,
+  t.partial({
+    dbResourcePkFieldName: NonEmptyString,
+    streamPkFieldName: NonEmptyString,
+  }),
+]);
+
+export type DocumentModelQueryParams = t.TypeOf<
+  typeof DocumentModelQueryParams
+>;
+
+export const DocumentModelFindByKeyQueryParams = t.intersection([
+  DocumentModelQueryParams,
+  t.type({
+    queryType: t.literal("FIND_BY_KEY"),
+  }),
+]);
+
+export type DocumentModelFindByKeyQueryParams = t.TypeOf<
+  typeof DocumentModelFindByKeyQueryParams
+>;
+
+export const DocumentModelVersionedQueryParams = t.intersection([
+  DocumentModelQueryParams,
+  t.type({
+    queryType: t.literal("FIND_LAST_VERSION"),
+    dbResourceVersionFieldName: NonEmptyString,
+  }),
+]);
+
+export type DocumentModelVersionedQueryParams = t.TypeOf<
+  typeof DocumentModelVersionedQueryParams
+>;
+
+export const RelationalModelVersionedQueryParams = t.intersection([
+  CommonFindDbParams,
+  t.type({
+    queryType: t.literal("FIND_LAST_VERSION"),
+    dbResourceVersionFieldName: NonEmptyString,
+  }),
+]);
+export type RelationalModelVersionedQueryParams = t.TypeOf<
+  typeof RelationalModelVersionedQueryParams
+>;
+
+export const DocumentDBParams = t.intersection([
+  CommonDBParams,
+  t.union([
+    DocumentModelFindByKeyQueryParams,
+    DocumentModelVersionedQueryParams,
+  ]),
+]);
+
+export type DocumentDBParams = t.TypeOf<typeof DocumentDBParams>;
+
+export const RelationalDBParams = t.intersection([
+  CommonDBParams,
+  t.union([
+    RelationalModelFindByKeyParams,
+    RelationalModelVersionedQueryParams,
+  ]),
+]);
+export type RelationalDBParams = t.TypeOf<typeof RelationalDBParams>;
+
+export const DBEnrichmentDataSource = t.union([
+  t.type({ type: t.literal("CosmosDB"), params: DocumentDBParams }),
+  t.type({ type: t.literal("MongoDB"), params: DocumentDBParams }),
+  t.type({ type: t.literal("PosgresDB"), params: RelationalDBParams }),
+]);
+export type DBEnrichmentDataSource = t.TypeOf<typeof DBEnrichmentDataSource>;
 
 export const EnrichmentDataSource = t.union([
   BlobStorage,
   TableStorage,
   API,
-  DB,
+  DBEnrichmentDataSource,
 ]);
 
 export type EnrichmentDataSource = t.TypeOf<typeof EnrichmentDataSource>;

@@ -12,21 +12,18 @@ describe("DataEnrichment", () => {
 
   const aCosmosDBParams = {
     connectionString: "cosmos_db_connection_string",
-    query: "SELECT * FROM container",
-    partitionKey: "pk",
-    id: "id",
+    dbResourceKeyFieldName: "foo",
+    dbResourceName: "container",
+    queryType: "FIND_BY_KEY",
+    streamKeyFieldName: "foo"
   };
 
   const aMongoDBParams = {
-    connectionString: "mongo_db_connection_string",
-    query: "db.collection.find({})",
-    id: "id",
+    ...aCosmosDBParams
   };
 
   const aPostgresDBParams = {
-    connectionString: "postgres_db_connection_string",
-    query: "SELECT * FROM table",
-    id: "id",
+    ...aCosmosDBParams
   };
 
   const anAPIParams = {
