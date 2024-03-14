@@ -20,8 +20,15 @@ describe("Filter", () => {
     pipe(
       input,
       DataFilter.decode,
-      E.mapLeft(() => expect(success).toBeFalsy()),
-      E.map((decoded) => expect(decoded).toEqual(input)),
+      E.fold(
+        () => {
+          expect(success).toBeFalsy();
+        },
+        (res) => {
+          expect(success).toBeTruthy();
+          expect(res).toEqual(input);
+        },
+      ),
     );
   });
 });

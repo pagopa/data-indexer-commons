@@ -20,6 +20,15 @@ const DataFilterStaticConditions = t.union([
     ]),
     staticValue: t.number,
   }),
+]);
+
+const DataFilterStatic = t.intersection([
+  DataFilterCommon,
+  DataFilterStaticConditions,
+]);
+
+const DataFilterNullOrUndefined = t.intersection([
+  DataFilterCommon,
   t.type({
     condition: t.union([
       t.literal("isNull"),
@@ -28,12 +37,8 @@ const DataFilterStaticConditions = t.union([
       t.literal("isNotUndefined"),
     ]),
     staticValue: t.union([t.undefined, t.never]),
+    compareField: t.union([t.undefined, t.never]),
   }),
-]);
-
-const DataFilterStatic = t.intersection([
-  DataFilterCommon,
-  DataFilterStaticConditions,
 ]);
 
 const DataFilterField = t.intersection([
@@ -51,6 +56,10 @@ const DataFilterField = t.intersection([
   }),
 ]);
 
-export const DataFilter = t.union([DataFilterStatic, DataFilterField]);
+export const DataFilter = t.union([
+  DataFilterStatic,
+  DataFilterNullOrUndefined,
+  DataFilterField,
+]);
 
 export type DataFilter = t.TypeOf<typeof DataFilter>;
