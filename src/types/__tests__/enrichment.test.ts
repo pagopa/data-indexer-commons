@@ -12,6 +12,7 @@ describe("DataEnrichment", () => {
 
   const aCosmosDBParams = {
     connectionString: "cosmos_db_connection_string",
+    dbName: "dbName",
     dbResourceKeyFieldName: "foo",
     dbResourceName: "container",
     queryType: "FIND_BY_KEY",
