@@ -6,6 +6,11 @@ const DataFilterCommon = t.type({
   fieldName: NonEmptyString,
 });
 
+const DataFilterStaticCommon = t.type({
+  filterType: t.literal("STATIC"),
+  compareField: t.union([t.undefined, t.never]),
+});
+
 const DataFilterStaticConditions = t.union([
   t.type({
     condition: t.union([t.literal("eq"), t.literal("neq")]),
@@ -24,11 +29,13 @@ const DataFilterStaticConditions = t.union([
 
 const DataFilterStatic = t.intersection([
   DataFilterCommon,
+  DataFilterStaticCommon,
   DataFilterStaticConditions,
 ]);
 
 const DataFilterNullOrUndefined = t.intersection([
   DataFilterCommon,
+  DataFilterStaticCommon,
   t.type({
     condition: t.union([
       t.literal("isNull"),
@@ -37,12 +44,17 @@ const DataFilterNullOrUndefined = t.intersection([
       t.literal("isNotUndefined"),
     ]),
     staticValue: t.union([t.undefined, t.never]),
-    compareField: t.union([t.undefined, t.never]),
   }),
 ]);
 
+const DataFilterFieldCommon = t.type({
+  filterType: t.literal("DYNAMIC"),
+  staticValue: t.union([t.undefined, t.never]),
+});
+
 const DataFilterField = t.intersection([
   DataFilterCommon,
+  DataFilterFieldCommon,
   t.type({
     condition: t.union([
       t.literal("eq"),
