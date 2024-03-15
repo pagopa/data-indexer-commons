@@ -7,7 +7,7 @@ const DataFilterCommon = t.type({
 });
 
 const DataFilterStaticCommon = t.type({
-  type: t.literal("staticFilter"),
+  filterType: t.literal("STATIC"),
   compareField: t.union([t.undefined, t.never]),
 });
 
@@ -48,7 +48,7 @@ const DataFilterNullOrUndefined = t.intersection([
 ]);
 
 const DataFilterFieldCommon = t.type({
-  type: t.literal("dynamicFilter"),
+  filterType: t.literal("DYNAMIC"),
   staticValue: t.union([t.undefined, t.never]),
 });
 
