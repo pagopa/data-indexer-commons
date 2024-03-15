@@ -1,6 +1,7 @@
 import * as E from "fp-ts/Either";
 import { pipe } from "fp-ts/lib/function";
 import { Configuration } from "../../configuration/configuration";
+import { filter } from "fp-ts/lib/Filterable";
 
 describe("DataPipeline", () => {
   const aValidDataSourcing = {
@@ -87,6 +88,7 @@ describe("DataPipeline", () => {
   };
 
   const aValidDataFiltering = {
+    filterType: "STATIC",
     fieldName: "age",
     condition: "gte",
     staticValue: 18,
