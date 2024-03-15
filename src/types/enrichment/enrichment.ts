@@ -46,6 +46,7 @@ export const API = t.type({
 
 const CommonDBParams = t.type({
   connectionString: NonEmptyString,
+  dbName: NonEmptyString,
   dbResourceName: NonEmptyString,
 });
 
@@ -117,22 +118,50 @@ export type RelationalModelVersionedQueryParams = t.TypeOf<
   typeof RelationalModelVersionedQueryParams
 >;
 
-export const DocumentDBParams = t.intersection([
+export const DocumentModelFindByKeyQuery = t.intersection([
   CommonDBParams,
-  t.union([
-    DocumentModelFindByKeyQueryParams,
-    DocumentModelVersionedQueryParams,
-  ]),
+  DocumentModelFindByKeyQueryParams,
+]);
+export type DocumentModelFindByKeyQuery = t.TypeOf<
+  typeof DocumentModelFindByKeyQuery
+>;
+
+export const DocumentModelVersionedQuery = t.intersection([
+  CommonDBParams,
+  DocumentModelVersionedQueryParams,
+]);
+
+export type DocumentModelVersionedQuery = t.TypeOf<
+  typeof DocumentModelVersionedQuery
+>;
+
+export const DocumentDBParams = t.union([
+  DocumentModelFindByKeyQuery,
+  DocumentModelVersionedQuery,
 ]);
 
 export type DocumentDBParams = t.TypeOf<typeof DocumentDBParams>;
 
-export const RelationalDBParams = t.intersection([
+export const RelationalModelFindByKeyQuery = t.intersection([
   CommonDBParams,
-  t.union([
-    RelationalModelFindByKeyParams,
-    RelationalModelVersionedQueryParams,
-  ]),
+  RelationalModelFindByKeyParams,
+]);
+export type RelationalModelFindByKeyQuery = t.TypeOf<
+  typeof RelationalModelFindByKeyQuery
+>;
+
+export const RelationalModelVersionedQuery = t.intersection([
+  CommonDBParams,
+  RelationalModelVersionedQueryParams,
+]);
+
+export type RelationalModelVersionedQuery = t.TypeOf<
+  typeof RelationalModelVersionedQuery
+>;
+
+export const RelationalDBParams = t.union([
+  RelationalModelFindByKeyParams,
+  RelationalModelVersionedQueryParams,
 ]);
 export type RelationalDBParams = t.TypeOf<typeof RelationalDBParams>;
 
